@@ -29,6 +29,7 @@ exports.handler = async (event, context) => {
   const SHOPIFY_API_PASSWORD = process.env.SHOPIFY_API_PASSWORD;
   const SHOPIFY_SHOP_NAME = process.env.SHOPIFY_SHOP_NAME;
 
+  console.log("devvv",SHOPIFY_SHOP_NAME)
   try {
     const response = await axios.post(`https://${SHOPIFY_SHOP_NAME}.myshopify.com/admin/api/2023-01/metafields.json`, {
       metafield: {
