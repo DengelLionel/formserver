@@ -1,10 +1,33 @@
 const axios = require('axios');
 
 exports.handler = async (event, context) => {
-  const { dni, celular } = JSON.parse(event.body); // Asegúrate de que estos campos coincidan con los nombres de tus inputs en el formulario.
-  const SHOPIFY_API_KEY = process.env.SHOPIFY_API_KEY; // Configura estas variables en tu entorno serverless.
+  // Verificar si event.body tiene contenido
+  if (!event.body) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: 'No data provided' })
+    };
+  }
+
+  let dni, celular;
+
+  try {
+    // Intentar analizar el cuerpo de la solicitud
+    const data = JSON.parse(event.body);
+    dni = data.dni;
+    celular = data.celular;
+  } catch (error) {
+    // Manejar el error si el JSON no se puede analizar
+    console.error('Error parsing JSON:', error);
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: 'Invalid JSON input' })
+    };
+  }
+
+  const SHOPIFY_API_KEY = process.env.SHOPIFY_API_KEY;
   const SHOPIFY_API_PASSWORD = process.env.SHOPIFY_API_PASSWORD;
-  const SHOPIFY_SHOP_NAME = process.env.SHOPIFY_SHOP_NAME; // Asegúrate de incluir solo el nombre de tu tienda, sin ".myshopify.com".
+  const SHOPIFY_SHOP_NAME = process.env.SHOPIFY_SHOP_NAME;
 
   try {
     const response = await axios.post(`https://${SHOPIFY_SHOP_NAME}.myshopify.com/admin/api/2023-01/metafields.json`, {
@@ -14,7 +37,7 @@ exports.handler = async (event, context) => {
         value: JSON.stringify({ dni, celular }),
         value_type: 'json_string',
         owner_resource: 'product',
-        owner_id: 'el_id_del_recurso'
+        owner_id: 'el_id_del_recurso' // Asegúrate de reemplazar esto con el ID real del recurso.
       }
     }, {
       auth: {
@@ -28,7 +51,7 @@ exports.handler = async (event, context) => {
       body: JSON.stringify(response.data)
     };
   } catch (error) {
-    console.error(error);
+    console.error('Shopify API error:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: 'Failed to update metafield' })
