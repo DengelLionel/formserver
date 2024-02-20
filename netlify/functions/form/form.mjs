@@ -1,45 +1,30 @@
 const axios = require('axios');
 
 exports.handler = async (event, context) => {
-  // Verificar si event.body tiene contenido
-
   const headers = {
-    'Access-Control-Allow-Origin': '*', // Para producción, cambia '*' por el dominio de tu tienda Shopify
+    'Access-Control-Allow-Origin': '*', // Ajusta para producción
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
   };
 
-  // Si el método HTTP es OPTIONS, devuelve una respuesta de preflight
   if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers,
-      body: '',
-    };
+    return { statusCode: 200, headers, body: '' };
   }
 
-  let dni, celular;
-
-  try {
-    // Intentar analizar el cuerpo de la solicitud
-    const data = JSON.parse(event.body);
-    dni = data.dni;
-    celular = data.celular;
-  } catch (error) {
-    // Manejar el error si el JSON no se puede analizar
-    console.error('Error parsing JSON:', error);
+  if (!event.body) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: 'Invalid JSON input' })
+      headers,
+      body: JSON.stringify({ error: 'No body in the request' })
     };
   }
 
-  const SHOPIFY_API_KEY = process.env.SHOPIFY_API_KEY;
-  const SHOPIFY_API_PASSWORD = process.env.SHOPIFY_API_PASSWORD;
-  const SHOPIFY_SHOP_NAME = process.env.SHOPIFY_SHOP_NAME;
-
-  console.log("devvv",SHOPIFY_SHOP_NAME)
   try {
+    const { dni, celular } = JSON.parse(event.body);
+    const SHOPIFY_API_KEY = process.env.SHOPIFY_API_KEY;
+    const SHOPIFY_API_PASSWORD = process.env.SHOPIFY_API_PASSWORD;
+    const SHOPIFY_SHOP_NAME = process.env.SHOPIFY_SHOP_NAME;
+
     const response = await axios.post(`https://${SHOPIFY_SHOP_NAME}.myshopify.com/admin/api/2023-01/metafields.json`, {
       metafield: {
         namespace: 'custom_form',
@@ -47,7 +32,7 @@ exports.handler = async (event, context) => {
         value: JSON.stringify({ dni, celular }),
         value_type: 'json_string',
         owner_resource: 'product',
-        owner_id: 'el_id_del_recurso' 
+        owner_id: 'el_id_del_recurso'
       }
     }, {
       auth: {
@@ -56,15 +41,9 @@ exports.handler = async (event, context) => {
       }
     });
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify(response.data)
-    };
+    return { statusCode: 200, headers, body: JSON.stringify(response.data) };
   } catch (error) {
     console.error('Shopify API error:', error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Failed to update metafield' })
-    };
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Failed to update metafield' }) };
   }
 };
