@@ -10,7 +10,7 @@ exports.handler = async (event, context) => {
   };
 
   // Si el método HTTP es OPTIONS, devuelve una respuesta de preflight
-  if (!event.body) {
+  if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
       headers,
