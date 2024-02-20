@@ -10,7 +10,7 @@ exports.handler = async (event, context) => {
   };
 
   // Si el método HTTP es OPTIONS, devuelve una respuesta de preflight
-  if (event.httpMethod === 'OPTIONS') {
+  if (!event.body) {
     return {
       statusCode: 200,
       headers,
@@ -47,7 +47,7 @@ exports.handler = async (event, context) => {
         value: JSON.stringify({ dni, celular }),
         value_type: 'json_string',
         owner_resource: 'product',
-        owner_id: 'el_id_del_recurso' // Asegúrate de reemplazar esto con el ID real del recurso.
+        owner_id: 'el_id_del_recurso' 
       }
     }, {
       auth: {
