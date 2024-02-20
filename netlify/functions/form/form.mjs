@@ -2,10 +2,19 @@ const axios = require('axios');
 
 exports.handler = async (event, context) => {
   // Verificar si event.body tiene contenido
-  if (!event.body) {
+
+  const headers = {
+    'Access-Control-Allow-Origin': '*', // Para producción, cambia '*' por el dominio de tu tienda Shopify
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  };
+
+  // Si el método HTTP es OPTIONS, devuelve una respuesta de preflight
+  if (event.httpMethod === 'OPTIONS') {
     return {
-      statusCode: 400,
-      body: JSON.stringify({ error: 'No data provided' })
+      statusCode: 200,
+      headers,
+      body: '',
     };
   }
 
