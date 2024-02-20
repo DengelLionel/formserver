@@ -8,8 +8,21 @@ admin.initializeApp({
 const db = admin.firestore();
 
 exports.handler = async (event) => {
+  // Encabezados para permitir solicitudes CORS
+  const headers = {
+    'Access-Control-Allow-Origin': 'https://ropalimaperu.myshopify.com', // Cambia esto por tu dominio de Shopify
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  };
+
+  // Responder a solicitudes de preflight (OPTIONS)
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 204, headers, body: '' };
+  }
+
+  // Asegúrate de que el método HTTP sea POST
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return { statusCode: 405, headers, body: 'Method Not Allowed' };
   }
 
   try {
@@ -22,9 +35,9 @@ exports.handler = async (event) => {
       fechaRegistro: admin.firestore.FieldValue.serverTimestamp(),
     });
 
-    return { statusCode: 200, body: 'Datos guardados correctamente' };
+    return { statusCode: 200, headers, body: 'Datos guardados correctamente' };
   } catch (error) {
     console.error('Error guardando los datos:', error);
-    return { statusCode: 500, body: 'Error interno del servidor' };
+    return { statusCode: 500, headers, body: 'Error interno del servidor' };
   }
 };
