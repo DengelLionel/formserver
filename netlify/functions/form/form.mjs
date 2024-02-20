@@ -1,49 +1,30 @@
-const axios = require('axios');
+const admin = require('firebase-admin');
 
-exports.handler = async (event, context) => {
-  const headers = {
-    'Access-Control-Allow-Origin': '*', // Ajusta para producción
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  };
+const serviceAccount = require('../../../creden/credencial.json');
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers, body: '' };
-  }
+const db = admin.firestore();
 
-  if (!event.body) {
-    return {
-      statusCode: 400,
-      headers,
-      body: JSON.stringify({ error: 'No body in the request' })
-    };
+exports.handler = async (event) => {
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
   try {
     const { dni, celular } = JSON.parse(event.body);
-    const SHOPIFY_API_KEY = process.env.SHOPIFY_API_KEY;
-    const SHOPIFY_API_PASSWORD = process.env.SHOPIFY_API_PASSWORD;
-    const SHOPIFY_SHOP_NAME = process.env.SHOPIFY_SHOP_NAME;
 
-    const response = await axios.post(`https://${SHOPIFY_SHOP_NAME}.myshopify.com/admin/api/2023-01/metafields.json`, {
-      metafield: {
-        namespace: 'custom_form',
-        key: 'customer_info',
-        value: JSON.stringify({ dni, celular }),
-        value_type: 'json_string',
-        owner_resource: 'product',
-        owner_id: 'el_id_del_recurso'
-      }
-    }, {
-      auth: {
-        username: SHOPIFY_API_KEY,
-        password: SHOPIFY_API_PASSWORD
-      }
+    // Añadir documento a Firestore
+    await db.collection('clientes').add({
+      dni,
+      celular,
+      fechaRegistro: admin.firestore.FieldValue.serverTimestamp(),
     });
 
-    return { statusCode: 200, headers, body: JSON.stringify(response.data) };
+    return { statusCode: 200, body: 'Datos guardados correctamente' };
   } catch (error) {
-    console.error('Shopify API error:', error);
-    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Failed to update metafield' }) };
+    console.error('Error guardando los datos:', error);
+    return { statusCode: 500, body: 'Error interno del servidor' };
   }
 };
