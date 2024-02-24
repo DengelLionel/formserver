@@ -33,7 +33,7 @@ exports.handler = async (event) => {
       documento:documento.toString(),
       celular:celular.toString(),
       fechaRegistro: admin.firestore.FieldValue.serverTimestamp(),
-      aceptopoliticas:aceptopoliticas==true&&"acepto",
+      aceptopoliticas:aceptopoliticas,
       documentselected:documentselected
     });
 
