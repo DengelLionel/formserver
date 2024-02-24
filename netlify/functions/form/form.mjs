@@ -30,11 +30,13 @@ exports.handler = async (event) => {
 
     // Añadir documento a Firestore
     await db.collection('clientes_form').add({
+      documentselected:documentselected,
       documento:documento.toString(),
       celular:celular.toString(),
-      fechaRegistro: admin.firestore.FieldValue.serverTimestamp(),
       aceptopoliticas:aceptopoliticas,
-      documentselected:documentselected
+      fechaRegistro: admin.firestore.FieldValue.serverTimestamp()
+     
+      
     });
 
     return { statusCode: 200, headers, body: 'Datos guardados correctamente' };
