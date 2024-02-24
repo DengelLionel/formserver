@@ -30,8 +30,8 @@ exports.handler = async (event) => {
 
     // Añadir documento a Firestore
     await db.collection('clientes').add({
-      documento,
-      celular,
+      documento:documento.toString(),
+      celular:celular.toString(),
       fechaRegistro: admin.firestore.FieldValue.serverTimestamp(),
       aceptopoliticas:aceptopoliticas==true&&"acepto",
       documentselected:documentselected
