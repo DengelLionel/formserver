@@ -10,7 +10,7 @@ const db = admin.firestore();
 exports.handler = async (event) => {
   // Encabezados para permitir solicitudes CORS
   const headers = {
-    'Access-Control-Allow-Origin': 'https://www.isatexhome.com', // Cambia esto por tu dominio de Shopify
+    'Access-Control-Allow-Origin': 'isatex-home.myshopify.com', // Cambia esto por tu dominio de Shopify
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
   };
