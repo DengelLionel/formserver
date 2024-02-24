@@ -12,7 +12,7 @@ exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': 'isatex-home.myshopify.com', // Cambia esto por tu dominio de Shopify
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Methods': 'POST,GET, OPTIONS',
   };
 
   // Responder a solicitudes de preflight (OPTIONS)
