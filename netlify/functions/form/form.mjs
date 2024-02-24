@@ -29,7 +29,7 @@ exports.handler = async (event) => {
     const { documento, celular,aceptopoliticas,documentselected } = JSON.parse(event.body);
 
     // Añadir documento a Firestore
-    await db.collection('clientes').add({
+    await db.collection('clientes_form').add({
       documento:documento.toString(),
       celular:celular.toString(),
       fechaRegistro: admin.firestore.FieldValue.serverTimestamp(),
