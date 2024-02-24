@@ -26,13 +26,14 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { dni, celular } = JSON.parse(event.body);
+    const { documento, celular,aceptopoliticas } = JSON.parse(event.body);
 
     // Añadir documento a Firestore
     await db.collection('clientes').add({
-      dni,
+      documento,
       celular,
       fechaRegistro: admin.firestore.FieldValue.serverTimestamp(),
+      aceptopoliticas:aceptopoliticas==true&&"acepto"
     });
 
     return { statusCode: 200, headers, body: 'Datos guardados correctamente' };
