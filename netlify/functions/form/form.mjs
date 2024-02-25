@@ -12,8 +12,7 @@ exports.handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST,GET, OPTIONS',
-    'Content-Security-Policy': "default-src 'self'; script-src 'self' https://apis.google.com; object-src 'none';"
+    'Access-Control-Allow-Methods': 'POST,GET, OPTIONS'
   };
 
   if (event.httpMethod === 'OPTIONS') {
