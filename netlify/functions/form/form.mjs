@@ -36,7 +36,7 @@ exports.handler = async (event) => {
     });
 
     // URL del script de Google Apps Script
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzPPj3TzDuOAUZmvct9QEdoa0RxJwleWW0Xaray77kcgcwPJMK_XbrgCw_eUuhiH0I/exec';
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbxEy7FCeGx4zWJMDzmA2xVQQM012kFVxBfIc2582laLQVqI3--0c3jyZDXBDBD-U7kE/exec';
 
     // Datos a enviar al script de Google Apps Script
     const scriptData = {
