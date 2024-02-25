@@ -32,7 +32,7 @@ exports.handler = async (event) => {
       documento: documento.toString(),
       celular: celular.toString(),
       aceptopoliticas: aceptopoliticas,
-      fechaRegistro: admin.firestore.FieldValue.serverTimestamp(),
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
     });
 
     // URL del script de Google Apps Script
