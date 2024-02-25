@@ -49,7 +49,7 @@ exports.handler = async (event) => {
     // Realizar solicitud POST al script de Google Apps Script
     const response = await axios.post(scriptUrl, scriptData, {
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
       },
     });
 
