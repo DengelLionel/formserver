@@ -40,8 +40,8 @@ exports.handler = async (event) => {
 
     // Datos a enviar al script de Google Apps Script
     const scriptData = {
-      documento,
-      celular,
+      documento: documento.toString(),
+      celular: celular.toString(),
       aceptopoliticas,
       documentselected,
     };
