@@ -24,13 +24,14 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { documento, celular, aceptopoliticas, documentselected } = JSON.parse(event.body);
+    const { nombre, nombreempresa, celular, aceptopoliticas,mensaje } = JSON.parse(event.body);
 
     // Añadir documento a Firestore
     const docRef = await db.collection('clientes_form').add({
-      documentselected: documentselected,
-      documento: documento.toString(),
+      nombre: nombre,
+      nombreempresa:nombreempresa,
       celular: celular.toString(),
+      mensaje:mensaje,
       aceptopoliticas: aceptopoliticas,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
     });
@@ -40,10 +41,11 @@ exports.handler = async (event) => {
 
     // Datos a enviar al script de Google Apps Script
     const scriptData = {
-      documento: documento.toString(),
+      nombre: nombre,
+      nombreempresa:nombreempresa,
       celular: celular.toString(),
-      aceptopoliticas,
-      documentselected,
+      mensaje:mensaje,
+      aceptopoliticas: aceptopoliticas
     };
 
     // Realizar solicitud POST al script de Google Apps Script
